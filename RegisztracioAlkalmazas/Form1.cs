@@ -26,22 +26,26 @@ namespace RegisztracioAlkalmazas
                      StreamWriter sw = new StreamWriter(filename);
                      
 
-                     sw.WriteLine("Név: " + nev_TextBox.Text);
-                     sw.WriteLine("Szül. Dátum: " + szulDatum_textbox.Text);
+                     sw.Write(nev_TextBox.Text+ ";"); //név
+                     sw.Write(szulDatum_textbox.Text+ ";"); //szüldatum
                      if (F_radioButton.Checked)
                      {
-                         sw.WriteLine("Neme: " + F_radioButton.Text);
+                         sw.Write(F_radioButton.Text+";"); // Férfi
                      }
                      else
                      {
-                         sw.WriteLine("Neme: " + N_radioButton.Text);
+                         sw.Write(N_radioButton.Text+";"); //nő
                      }
 
-                     sw.WriteLine("Hobbija: " + hobbi_listBox.SelectedItem.ToString());
-                 //    sw.WriteLine("Összes hobbi: " + hobbi_listBox.Items.Cast<String>().ToArray() + ",");
-                
-                     //nem jól irja ki---------------------------------------------------------------------------------
+                     sw.Write(hobbi_listBox.SelectedItem.ToString()+";"); //hobbi
 
+                     foreach (var item in hobbi_listBox.Items)
+                     {
+                         sw.Write(item+","); //lista
+                     }
+                     
+                   //  sw.Write(";");
+                     
                      sw.Close();
                  }
                  catch (Exception)
@@ -64,20 +68,43 @@ namespace RegisztracioAlkalmazas
                     nev_TextBox.Text = "";
                     szulDatum_textbox.Text = "";
                     hobbi_listBox.Text = "";
-                    string[] beolvasottAdatok = new string[3];
+                    string[] beolvasottAdatok = new string[5];
                     string beolvasottak = sr.ReadLine();
-                    while (beolvasottak!= null)
+                  //  while (beolvasottak!= null)
                     {
-                        beolvasottAdatok = beolvasottak.Split(' ');
-                        string nev = beolvasottAdatok[0];
-                        string szulDatum = beolvasottAdatok[1];
-                        string hobbiListaBox = beolvasottAdatok[2];
+                        
+                         beolvasottAdatok = beolvasottak.Split(';');
+                         string nev = beolvasottAdatok[0];
+                         string szulDatum = beolvasottAdatok[1];
+                         string radioButton = beolvasottAdatok[2];
+                         string kivalasztottHobbi = beolvasottAdatok[3];
+                        // string hobbiListaBox = beolvasottAdatok[4];
+                         
+
+                        nev_TextBox.Text = nev;
+                        szulDatum_textbox.Text = szulDatum;
+                        if (radioButton=="F")
+                        {
+                            F_radioButton.Checked = true;
+                        }
+                        else
+                        {
+                            N_radioButton.Checked = true;
+                        }
+                        ujHobbi_textbox.Text = kivalasztottHobbi;
+
+                        hobbi_listBox.Items.Clear();
+                        string[] spliteltHobbik = beolvasottAdatok[4].Split(',');
+                        foreach (var item in spliteltHobbik)
+                        {
+                            hobbi_listBox.Items.Add(item);
+                        }
+                        
 
                     }
-                    nev_TextBox.Text = beolvasottAdatok[0];
-                    szulDatum_textbox.Text = beolvasottAdatok[1];
-                    hobbi_listBox.Text = beolvasottAdatok[2];
-                    //nem tudom beolvasni -----------------------------------------------------
+                    
+
+                    sr.Close();
                 }
                 catch (Exception)
                 {
@@ -107,5 +134,7 @@ namespace RegisztracioAlkalmazas
         {
             openFileDialog1.ShowDialog();
         }
+
+        
     }
 }
